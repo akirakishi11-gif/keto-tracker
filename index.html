@@ -2,18 +2,50 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Keto Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keto Tracker - らーめんじゃん？</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; color: #333; }
+        .card { background: white; padding: 20px; border-radius: 12px; shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        h1 { color: #d32f2f; font-size: 1.5rem; text-align: center; }
+        .data-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .total-box { background: #333; color: white; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; }
+        .pfc-bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+        .p { background: #ff5252; width: 16%; } /* Protein */
+        .f { background: #ffeb3b; width: 80%; } /* Fat */
+        .c { background: #4caf50; width: 4%; }  /* Carb */
+        .tips { font-size: 0.85rem; color: #666; margin-top: 15px; line-height: 1.6; }
+    </style>
 </head>
 <body>
-    <script>
-        // Reactのimportを消して、ここから直接JavaScriptを書く
-        const TARGETS = {
-            calories: 1680,
-            fat: 131, 
-            protein: 105,
-            carbs: 20
-        };
-        // ...以下、計算ロジック
-    </script>
+
+<div class="card">
+    <h1>今日のケト飯ログ</h1>
+    
+    <div class="data-row"><span>鶏肉(皮付)</span><span>500g</span></div>
+    <div class="data-row"><span>豚の脂(サロ)</span><span>60g</span></div>
+    <div class="data-row"><span>生クリーム</span><span>100g</span></div>
+    <div class="data-row"><span>バター・オイル</span><span>各15g</span></div>
+    <div class="data-row"><span>クルミ</span><span>25g</span></div>
+
+    <div class="pfc-bar">
+        <div class="p"></div><div class="f"></div><div class="c"></div>
+    </div>
+
+    <div class="total-box">
+        <div><strong>合計熱量: 約2,459 kcal</strong></div>
+        <div style="font-size: 0.9rem; margin-top: 5px;">
+            P: 95g | F: 225g | C: 12.6g
+        </div>
+    </div>
+
+    <div class="tips">
+        <strong>💡 メモ:</strong><br>
+        ・脂質比率80%達成！ケトーシス加速モード。<br>
+        ・黒胡椒×ターメリックで吸収率UP。<br>
+        ・明日の10時まで16時間断食。
+    </div>
+</div>
+
 </body>
 </html>
