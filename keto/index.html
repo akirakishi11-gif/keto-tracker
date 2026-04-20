@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="ja">
@@ -35,7 +34,7 @@
 .macro-fill { height: 100%; border-radius: 8px; transition: width 0.5s ease; }
 
 /* SUMMARY BOXES */
-.summary-grid { display: flex; gap: 8px; margin-top: 8px; }
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .summary-box { flex: 1; border-radius: 10px; padding: 8px 4px; text-align: center; }
 .summary-val { font-size: 17px; font-weight: 800; }
 .summary-sub { font-size: 11px; color: #888; margin-top: 1px; }
@@ -122,22 +121,27 @@
         <div class="macro-track"><div class="macro-fill" id="b-carbs" style="background:#2e7d32;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">タンパク質</span><span class="macro-val"><strong id="v-protein" style="color:#1565c0">0</strong><span style="color:#aaa"> / 105g</span></span></div>
+        <div class="macro-head"><span class="macro-label">タンパク質</span><span class="macro-val"><strong id="v-protein" style="color:#1565c0">0</strong><span style="color:#aaa"> / 94g</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-protein" style="background:#1565c0;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">脂質</span><span class="macro-val"><strong id="v-fat" style="color:#e65100">0</strong><span style="color:#aaa"> / 131g</span></span></div>
+        <div class="macro-head"><span class="macro-label">脂質</span><span class="macro-val"><strong id="v-fat" style="color:#e65100">0</strong><span style="color:#aaa"> / 117g</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-fat" style="background:#e65100;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">カロリー</span><span class="macro-val"><strong id="v-kcal" style="color:#6a1b9a">0</strong><span style="color:#aaa"> / 1680kcal</span></span></div>
+        <div class="macro-head"><span class="macro-label">カロリー</span><span class="macro-val"><strong id="v-kcal" style="color:#6a1b9a">0</strong><span style="color:#aaa"> / 1500kcal</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-kcal" style="background:#6a1b9a;width:0%"></div></div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-head"><span class="macro-label">食物繊維</span><span class="macro-val"><strong id="v-fiber" style="color:#00838f">0</strong><span style="color:#aaa"> / 25g</span></span></div>
+        <div class="macro-track"><div class="macro-fill" id="b-fiber" style="background:#00838f;width:0%"></div></div>
       </div>
       <div class="summary-grid">
         <div class="summary-box" style="background:#2e7d3212"><div class="summary-val" style="color:#2e7d32" id="s-carbs">0g</div><div class="summary-sub">糖質</div></div>
         <div class="summary-box" style="background:#1565c012"><div class="summary-val" style="color:#1565c0" id="s-protein">0g</div><div class="summary-sub">タンパク</div></div>
         <div class="summary-box" style="background:#e6510012"><div class="summary-val" style="color:#e65100" id="s-fat">0g</div><div class="summary-sub">脂質</div></div>
         <div class="summary-box" style="background:#6a1b9a12"><div class="summary-val" style="color:#6a1b9a" id="s-kcal">0</div><div class="summary-sub">kcal</div></div>
+        <div class="summary-box" style="background:#00838f12;grid-column:span 2"><div class="summary-val" style="color:#00838f" id="s-fiber">0g</div><div class="summary-sub">食物繊維（目標 25g）</div></div>
       </div>
     </div>
     <div class="card">
@@ -174,6 +178,50 @@
       <div id="history-list"><div class="empty">履歴がありません</div></div>
     </div>
   </div>
+
+  <!-- SETTINGS TAB -->
+
+  <div id="tab-settings" class="hidden">
+    <div class="card">
+      <div class="card-title">データのバックアップ</div>
+      <p style="font-size:13px;color:#666;line-height:1.7;margin-bottom:16px">
+        SafariとChromeでデータが共有されません。<br>
+        下のボタンでデータをコピーして、別のブラウザで「インポート」に貼り付けるとデータを移せます。
+      </p>
+
+```
+  <div style="margin-bottom:20px">
+    <div style="font-size:13px;font-weight:700;color:#333;margin-bottom:8px">① エクスポート（データをコピー）</div>
+    <button onclick="exportData()" style="background:#1565c0;color:#fff;border:none;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:700;width:100%;cursor:pointer;font-family:inherit">
+      データをクリップボードにコピー
+    </button>
+    <div id="export-msg" style="font-size:12px;color:#2e7d32;margin-top:6px;text-align:center;min-height:18px"></div>
+  </div>
+
+  <div style="border-top:1px solid #f0f0f0;padding-top:20px">
+    <div style="font-size:13px;font-weight:700;color:#333;margin-bottom:8px">② インポート（データを貼り付け）</div>
+    <textarea id="import-input" placeholder="コピーしたデータをここに貼り付けてください" style="width:100%;height:100px;border:1px solid #ddd;border-radius:10px;padding:10px;font-size:13px;font-family:inherit;resize:none;box-sizing:border-box;color:#333"></textarea>
+    <button onclick="importData()" style="background:#2e7d32;color:#fff;border:none;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:700;width:100%;cursor:pointer;font-family:inherit;margin-top:8px">
+      データを復元する
+    </button>
+    <div id="import-msg" style="font-size:12px;margin-top:6px;text-align:center;min-height:18px"></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">使い方</div>
+  <div style="font-size:13px;color:#555;line-height:2">
+    <div style="padding:6px 0;border-bottom:1px solid #f5f5f5"><strong style="color:#1565c0">Safari→Chrome へ移す場合</strong></div>
+    <div style="padding:6px 0;border-bottom:1px solid #f5f5f5">1. Safariでアプリを開く</div>
+    <div style="padding:6px 0;border-bottom:1px solid #f5f5f5">2. 設定タブ→「データをコピー」</div>
+    <div style="padding:6px 0;border-bottom:1px solid #f5f5f5">3. Chromeでアプリを開く</div>
+    <div style="padding:6px 0;border-bottom:1px solid #f5f5f5">4. 設定タブ→テキストエリアに貼り付け</div>
+    <div style="padding:6px 0">5. 「データを復元する」をタップ</div>
+  </div>
+</div>
+```
+
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -188,11 +236,14 @@
   <button class="nav-btn" id="nav-history" onclick="switchTab('history')">
     <span class="nav-icon">📅</span><span>履歴</span>
   </button>
+  <button class="nav-btn" id="nav-settings" onclick="switchTab('settings')">
+    <span class="nav-icon">⚙️</span><span>設定</span>
+  </button>
 </div>
 
 <script>
 // ─── DATA ────────────────────────────────────────────────
-const TARGETS = { calories:1680, fat:131, protein:105, carbs:20 };
+const TARGETS = { calories:1500, fat:117, protein:94, carbs:20 };
 const STORAGE_KEY = "keto_v3_log";
 
 const CAT_COLORS = {
@@ -340,7 +391,7 @@ function carbsColor(c) {
 document.addEventListener("DOMContentLoaded", () => {
   const today = getToday();
   document.getElementById("header-date").textContent =
-    today + " · 糖質20g以下 / 1680kcal";
+    today + " · 糖質20g以下 / 1500kcal（18h断食）";
   renderCatButtons();
   renderFoodList();
   renderToday();
@@ -350,7 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ─── TAB SWITCH ──────────────────────────────────────────
 function switchTab(tab) {
   currentTab = tab;
-  ["today","add","history"].forEach(t => {
+  ["today","add","history","settings"].forEach(t => {
     document.getElementById("tab-" + t).classList.toggle("hidden", t !== tab);
     const btn = document.getElementById("nav-" + t);
     btn.classList.toggle("active", t === tab);
@@ -506,8 +557,8 @@ function renderToday() {
   const today   = getToday();
   const entries = log[today] || [];
   const t = entries.reduce(
-    (a,e) => ({ kcal:a.kcal+e.kcal, protein:a.protein+e.protein, fat:a.fat+e.fat, carbs:a.carbs+e.carbs }),
-    { kcal:0, protein:0, fat:0, carbs:0 }
+    (a,e) => ({ kcal:a.kcal+e.kcal, protein:a.protein+e.protein, fat:a.fat+e.fat, carbs:a.carbs+e.carbs, fiber:a.fiber+(e.fiber||0) }),
+    { kcal:0, protein:0, fat:0, carbs:0, fiber:0 }
   );
 
   // Macro bars
@@ -516,6 +567,7 @@ function renderToday() {
     { id:"protein", val:t.protein, target:TARGETS.protein,  color:"#1565c0" },
     { id:"fat",     val:t.fat,     target:TARGETS.fat,      color:"#e65100" },
     { id:"kcal",    val:t.kcal,    target:TARGETS.calories, color:"#6a1b9a" },
+    { id:"fiber",   val:t.fiber,   target:25,               color:"#00838f" },
   ];
   macros.forEach(m => {
     const pct  = Math.min((m.val / m.target) * 100, 100);
@@ -531,6 +583,7 @@ function renderToday() {
   document.getElementById("s-protein").textContent = Math.round(t.protein*10)/10 + "g";
   document.getElementById("s-fat").textContent     = Math.round(t.fat*10)/10 + "g";
   document.getElementById("s-kcal").textContent    = Math.round(t.kcal);
+  document.getElementById("s-fiber").textContent   = Math.round(t.fiber*10)/10 + "g";
 
   // Keto score
   const ks = Math.max(0, Math.min(100, Math.round(100 - (t.carbs / TARGETS.carbs) * 100)));
@@ -613,6 +666,68 @@ function renderHistory() {
     row.onclick = () => { expandDay = isOpen ? null : day; renderHistory(); };
     container.appendChild(row);
   });
+}
+
+// ─── EXPORT ──────────────────────────────────────────────
+function exportData() {
+  const log = loadLog();
+  const json = JSON.stringify(log);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(json).then(() => {
+      const el = document.getElementById("export-msg");
+      el.textContent = "✅ コピーしました！別のブラウザで貼り付けてください";
+      setTimeout(() => { el.textContent = ""; }, 4000);
+    }).catch(() => { fallbackCopy(json); });
+  } else {
+    fallbackCopy(json);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try {
+    document.execCommand("copy");
+    const el = document.getElementById("export-msg");
+    el.textContent = "✅ コピーしました！別のブラウザで貼り付けてください";
+    setTimeout(() => { el.textContent = ""; }, 4000);
+  } catch(e) {
+    const el = document.getElementById("export-msg");
+    el.textContent = "⚠ 手動でコピーしてください";
+    el.style.color = "#c62828";
+  }
+  document.body.removeChild(ta);
+}
+
+// ─── IMPORT ──────────────────────────────────────────────
+function importData() {
+  const input = document.getElementById("import-input").value.trim();
+  const msgEl = document.getElementById("import-msg");
+  if (!input) {
+    msgEl.textContent = "⚠ データを貼り付けてください";
+    msgEl.style.color = "#c62828";
+    return;
+  }
+  try {
+    const parsed = JSON.parse(input);
+    if (typeof parsed !== "object" || Array.isArray(parsed)) throw new Error();
+    saveLog(parsed);
+    document.getElementById("import-input").value = "";
+    msgEl.textContent = "✅ データを復元しました！";
+    msgEl.style.color = "#2e7d32";
+    setTimeout(() => {
+      msgEl.textContent = "";
+      switchTab("today");
+      renderToday();
+    }, 1500);
+  } catch(e) {
+    msgEl.textContent = "⚠ データが正しくありません。もう一度コピーして貼り付けてください";
+    msgEl.style.color = "#c62828";
+  }
 }
 
 // ─── TOAST ───────────────────────────────────────────────
