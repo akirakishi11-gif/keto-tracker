@@ -1,16 +1,15 @@
-
 <!DOCTYPE html>
 
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ケト食事記録</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: #f4f4f0; font-family: 'Noto Sans JP', sans-serif; }
-  #app { max-width: 500px; margin: 0 auto; min-height: 100vh; padding-bottom: 80px; }
+  body { background: #f4f4f0; font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; }
+  #app { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 80px; overflow-x: hidden; }
 
 /* HEADER */
 .header { background: #fff; border-bottom: 2px solid #e0e0e0; padding: 16px 20px 14px; position: sticky; top: 0; z-index: 50; }
@@ -83,11 +82,11 @@
 .hist-entry { font-size: 13px; color: #666; padding-bottom: 5px; border-bottom: 1px solid #f5f5f5; margin-bottom: 5px; }
 
 /* BOTTOM NAV */
-.nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; background: #fff; border-top: 1px solid #e0e0e0; display: flex; z-index: 100; }
-.nav-btn { flex: 1; border: none; background: none; padding: 10px 0 18px; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; border-top: 3px solid transparent; }
+.nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: #fff; border-top: 1px solid #e0e0e0; display: flex; z-index: 100; }
+.nav-btn { flex: 1; border: none; background: none; padding: 8px 0 16px; font-size: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: inherit; border-top: 3px solid transparent; }
 .nav-btn.active { color: #2e7d32; border-top-color: #2e7d32; font-weight: 700; }
 .nav-btn:not(.active) { color: #bbb; }
-.nav-icon { font-size: 20px; }
+.nav-icon { font-size: 18px; }
 
 /* TOAST */
 .toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: #2e7d32; color: #fff; padding: 10px 20px; border-radius: 24px; font-size: 14px; font-weight: 600; z-index: 999; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.15); pointer-events: none; }
@@ -115,46 +114,73 @@
   <!-- TODAY TAB -->
 
   <div id="tab-today">
-    <!-- 体重入力カード -->
+    <!-- 体重＋栄養カード（1枚にまとめ） -->
     <div class="card">
-      <div class="card-title">今日の体重</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <input type="number" id="weight-input" inputmode="decimal" step="0.1" min="30" max="300"
-          placeholder="例: 78.7"
-          style="flex:1;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:20px;font-family:inherit;text-align:center;-moz-appearance:textfield">
-        <span style="font-size:16px;color:#888;font-weight:600">kg</span>
-        <button onclick="saveWeight()" style="background:#2e7d32;color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">記録</button>
+      <!-- 体重入力 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0f0f0">
+        <div style="font-size:13px;font-weight:700;color:#555;white-space:nowrap">体重</div>
+        <input type="text" id="weight-input" inputmode="decimal"
+          style="flex:1;min-width:0;border:1px solid #ddd;border-radius:8px;padding:8px 10px;font-size:18px;font-family:inherit;text-align:center"
+          oninput="
+            var pos=this.selectionStart;
+            var v=this.value.replace(/[^0-9.,]/g,'');
+            var parts=v.split(/[.,]/);
+            if(parts.length>2){v=parts[0]+'.'+parts.slice(1).join('');}
+            else{v=v.replace(',','.');}
+            if(this.value!==v){this.value=v;this.setSelectionRange(pos,pos);}
+          "
+        >
+        <span style="font-size:14px;color:#888;font-weight:600;white-space:nowrap">kg</span>
+        <button onclick="saveWeight()" style="background:#2e7d32;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">記録</button>
       </div>
-      <div id="weight-today-display" style="font-size:13px;color:#aaa;text-align:center"></div>
-    </div>
+      <div id="weight-today-display" style="font-size:12px;color:#aaa;text-align:center;margin-bottom:14px;margin-top:-8px"></div>
+      <!-- 栄養バー：カロリー→脂質→タンパク質→糖質→食物繊維 -->
+      <div class="card-title">今日の栄養</div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">糖質</span><span class="macro-val"><strong id="v-carbs" style="color:#2e7d32">0</strong><span style="color:#aaa"> / 20g</span></span></div>
-        <div class="macro-track"><div class="macro-fill" id="b-carbs" style="background:#2e7d32;width:0%"></div></div>
-      </div>
-      <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">タンパク質</span><span class="macro-val"><strong id="v-protein" style="color:#1565c0">0</strong><span style="color:#aaa"> / 94g</span></span></div>
-        <div class="macro-track"><div class="macro-fill" id="b-protein" style="background:#1565c0;width:0%"></div></div>
+        <div class="macro-head"><span class="macro-label">カロリー</span><span class="macro-val"><strong id="v-kcal" style="color:#6a1b9a">0</strong><span style="color:#aaa"> / 1500kcal</span></span></div>
+        <div class="macro-track"><div class="macro-fill" id="b-kcal" style="background:#6a1b9a;width:0%"></div></div>
       </div>
       <div class="macro-row">
         <div class="macro-head"><span class="macro-label">脂質</span><span class="macro-val"><strong id="v-fat" style="color:#e65100">0</strong><span style="color:#aaa"> / 117g</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-fat" style="background:#e65100;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">カロリー</span><span class="macro-val"><strong id="v-kcal" style="color:#6a1b9a">0</strong><span style="color:#aaa"> / 1500kcal</span></span></div>
-        <div class="macro-track"><div class="macro-fill" id="b-kcal" style="background:#6a1b9a;width:0%"></div></div>
+        <div class="macro-head"><span class="macro-label">タンパク質</span><span class="macro-val"><strong id="v-protein" style="color:#1565c0">0</strong><span style="color:#aaa"> / 94g</span></span></div>
+        <div class="macro-track"><div class="macro-fill" id="b-protein" style="background:#1565c0;width:0%"></div></div>
+      </div>
+      <div class="macro-row">
+        <div class="macro-head"><span class="macro-label">糖質</span><span class="macro-val"><strong id="v-carbs" style="color:#2e7d32">0</strong><span style="color:#aaa"> / 20g</span></span></div>
+        <div class="macro-track"><div class="macro-fill" id="b-carbs" style="background:#2e7d32;width:0%"></div></div>
       </div>
       <div class="macro-row">
         <div class="macro-head"><span class="macro-label">食物繊維</span><span class="macro-val"><strong id="v-fiber" style="color:#00838f">0</strong><span style="color:#aaa"> / 25g</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-fiber" style="background:#00838f;width:0%"></div></div>
       </div>
-      <div class="summary-grid">
-        <div class="summary-box" style="background:#2e7d3212"><div class="summary-val" style="color:#2e7d32" id="s-carbs">0g</div><div class="summary-sub">糖質</div></div>
-        <div class="summary-box" style="background:#1565c012"><div class="summary-val" style="color:#1565c0" id="s-protein">0g</div><div class="summary-sub">タンパク</div></div>
-        <div class="summary-box" style="background:#e6510012"><div class="summary-val" style="color:#e65100" id="s-fat">0g</div><div class="summary-sub">脂質</div></div>
-        <div class="summary-box" style="background:#6a1b9a12"><div class="summary-val" style="color:#6a1b9a" id="s-kcal">0</div><div class="summary-sub">kcal</div></div>
-        <div class="summary-box" style="background:#00838f12;grid-column:span 2"><div class="summary-val" style="color:#00838f" id="s-fiber">0g</div><div class="summary-sub">食物繊維（目標 25g）</div></div>
+      <!-- サマリー：1行目カロリー全幅／2行目脂質+タンパク／3行目糖質+食物繊維 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <div style="background:#6a1b9a12;border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;grid-column:span 2">
+          <span style="font-size:13px;color:#666">カロリー</span>
+          <span style="font-size:20px;font-weight:800;color:#6a1b9a" id="s-kcal">0 kcal</span>
+        </div>
+        <div style="background:#e6510012;border-radius:10px;padding:10px 8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:#666">脂質</span>
+          <span style="font-size:18px;font-weight:800;color:#e65100" id="s-fat">0g</span>
+        </div>
+        <div style="background:#1565c012;border-radius:10px;padding:10px 8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:#666">タンパク</span>
+          <span style="font-size:18px;font-weight:800;color:#1565c0" id="s-protein">0g</span>
+        </div>
+        <div style="background:#2e7d3212;border-radius:10px;padding:10px 8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:#666">糖質</span>
+          <span style="font-size:18px;font-weight:800;color:#2e7d32" id="s-carbs">0g</span>
+        </div>
+        <div style="background:#00838f12;border-radius:10px;padding:10px 8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:#666">食物繊維</span>
+          <span style="font-size:18px;font-weight:800;color:#00838f" id="s-fiber">0g</span>
+        </div>
       </div>
     </div>
+    <!-- 今日の記録 -->
     <div class="card">
       <div class="card-title" id="today-count">今日の記録（0件）</div>
       <div id="today-entries"><div class="empty">まだ記録がありません<br>「追加」タブから食材を選んでください</div></div>
@@ -193,16 +219,33 @@
   <!-- WEIGHT TAB -->
 
   <div id="tab-weight" class="hidden">
+    <!-- 過去の日付に体重を入力 -->
+    <div class="card">
+      <div class="card-title">体重を追加・修正</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <!-- 実際の入力はtype=date（非表示） -->
+        <input type="date" id="weight-date-input"
+          style="position:absolute;opacity:0;width:0;height:0;pointer-events:none">
+        <!-- 日本語表示ボタン（タップでカレンダーを開く） -->
+        <button onclick="document.getElementById('weight-date-input').showPicker ? document.getElementById('weight-date-input').showPicker() : document.getElementById('weight-date-input').click()"
+          style="flex:1;background:#f5f5f5;border:1px solid #ddd;border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit;color:#333;text-align:left;cursor:pointer;font-weight:600"
+          id="date-display-btn">2026年4月21日</button>
+        <input type="text" id="weight-val-input" inputmode="decimal" placeholder="78.3"
+          style="width:90px;border:1px solid #ddd;border-radius:8px;padding:10px 8px;font-size:17px;font-family:inherit;text-align:center"
+          oninput="var v=this.value.replace(/[^0-9.,]/g,'');var p=v.split(/[.,]/);if(p.length>2)v=p[0]+'.'+p.slice(1).join('');else v=v.replace(',','.');this.value=v;">
+        <span style="font-size:14px;color:#888;white-space:nowrap">kg</span>
+        <button onclick="saveWeightByDate()" style="background:#2e7d32;color:#fff;border:none;border-radius:8px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">記録</button>
+      </div>
+      <div style="font-size:11px;color:#bbb;text-align:center">日付ボタンをタップしてカレンダーで選択</div>
+    </div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <div class="card-title" style="margin-bottom:0">体重グラフ</div>
         <div style="font-size:11px;color:#bbb">開始時 80.0kg</div>
       </div>
-      <!-- グラフエリア -->
       <div style="position:relative;height:180px;margin-bottom:8px">
         <canvas id="weight-canvas" style="width:100%;height:180px"></canvas>
       </div>
-      <!-- 統計 -->
       <div id="weight-stats" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px"></div>
     </div>
     <div class="card">
@@ -262,11 +305,11 @@
   <button class="nav-btn active" id="nav-today" onclick="switchTab('today')">
     <span class="nav-icon">📊</span><span>今日</span>
   </button>
-  <button class="nav-btn" id="nav-add" onclick="switchTab('add')">
-    <span class="nav-icon">＋</span><span>追加</span>
-  </button>
   <button class="nav-btn" id="nav-weight" onclick="switchTab('weight')">
     <span class="nav-icon">⚖️</span><span>体重</span>
+  </button>
+  <button class="nav-btn" id="nav-add" onclick="switchTab('add')">
+    <span class="nav-icon">＋</span><span>追加</span>
   </button>
   <button class="nav-btn" id="nav-history" onclick="switchTab('history')">
     <span class="nav-icon">📅</span><span>履歴</span>
@@ -432,9 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderToday();
   renderHistory();
   renderWeightToday();
-  // input スクロール防止
-  const wi = document.getElementById("weight-input");
-  if (wi) wi.addEventListener("wheel", e => e.preventDefault(), { passive: false });
+  initDateSelects();
 });
 
 // ─── TAB SWITCH ──────────────────────────────────────────
@@ -622,7 +663,7 @@ function renderToday() {
   document.getElementById("s-carbs").textContent   = Math.round(t.carbs*10)/10 + "g";
   document.getElementById("s-protein").textContent = Math.round(t.protein*10)/10 + "g";
   document.getElementById("s-fat").textContent     = Math.round(t.fat*10)/10 + "g";
-  document.getElementById("s-kcal").textContent    = Math.round(t.kcal);
+  document.getElementById("s-kcal").textContent    = Math.round(t.kcal) + " kcal";
   document.getElementById("s-fiber").textContent   = Math.round(t.fiber*10)/10 + "g";
 
   // Keto score
@@ -717,18 +758,20 @@ function saveWeightLog(l) { try { localStorage.setItem(WEIGHT_KEY, JSON.stringif
 
 function saveWeight() {
   const inp = document.getElementById("weight-input");
-  const val = parseFloat(inp.value);
+  const raw = inp.value.replace(/,/g, ".");
+  const val = parseFloat(raw);
   if (isNaN(val) || val < 30 || val > 300) {
     showToast("⚠ 正しい体重を入力してください");
     return;
   }
+  const rounded = Math.round(val * 10) / 10;
   const wlog = loadWeightLog();
   const today = getToday();
-  wlog[today] = val;
+  wlog[today] = rounded;
   saveWeightLog(wlog);
-  inp.value = "";
+  // 入力値はそのまま残す（消さない）
   renderWeightToday();
-  showToast(val + "kg を記録しました");
+  showToast(rounded + "kg を記録しました");
 }
 
 function renderWeightToday() {
@@ -839,21 +882,25 @@ function drawWeightGraph(data) {
   const gH = H - pad.top - pad.bottom;
 
   const vals = data.map(d => d.val);
-  const minV = Math.min(...vals, START_WEIGHT) - 1;
-  const maxV = Math.max(...vals, START_WEIGHT) + 1;
+  // 0.5kg刻みでY軸範囲を設定
+  const minRaw = Math.min(...vals, START_WEIGHT);
+  const maxRaw = Math.max(...vals, START_WEIGHT);
+  const minV = Math.floor((minRaw - 0.5) * 2) / 2;  // 0.5kg単位で切り下げ
+  const maxV = Math.ceil((maxRaw + 0.5) * 2) / 2;    // 0.5kg単位で切り上げ
 
   function xPos(i) { return pad.left + (data.length === 1 ? gW / 2 : (i / (data.length - 1)) * gW); }
   function yPos(v) { return pad.top + gH - ((v - minV) / (maxV - minV)) * gH; }
 
-  // グリッド線
+  // グリッド線（0.5kg刻み）
   ctx.strokeStyle = "#f0f0f0";
   ctx.lineWidth = 1;
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.top + (gH / 4) * i;
+  let v = minV;
+  while (v <= maxV + 0.01) {
+    const y = yPos(v);
     ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + gW, y); ctx.stroke();
-    const v = maxV - ((maxV - minV) / 4) * i;
-    ctx.fillStyle = "#bbb"; ctx.font = `11px sans-serif`; ctx.textAlign = "right";
+    ctx.fillStyle = "#bbb"; ctx.font = "11px sans-serif"; ctx.textAlign = "right";
     ctx.fillText(v.toFixed(1), pad.left - 4, y + 4);
+    v = Math.round((v + 0.5) * 10) / 10;
   }
 
   // 開始体重の基準線
@@ -906,6 +953,45 @@ function drawWeightGraph(data) {
       ctx.fillText(label, x, H - pad.bottom + 14);
     }
   });
+}
+
+function initDateSelects() {
+  const inp = document.getElementById("weight-date-input");
+  if (!inp) return;
+  inp.value = getToday();
+  updateDateLabel();
+  inp.addEventListener("change", updateDateLabel);
+}
+
+function updateDateLabel() {
+  const inp = document.getElementById("weight-date-input");
+  const btn = document.getElementById("date-display-btn");
+  if (!inp || !btn) return;
+  if (!inp.value) return;
+  const parts = inp.value.split("-");
+  if (parts.length === 3) {
+    const y = parts[0], m = parseInt(parts[1]), d = parseInt(parts[2]);
+    btn.textContent = y + "年" + m + "月" + d + "日";
+  }
+}
+
+function getSelectedDate() {
+  return document.getElementById("weight-date-input").value;
+}
+
+function saveWeightByDate() {
+  const day   = getSelectedDate();
+  const valEl = document.getElementById("weight-val-input");
+  const raw   = valEl.value.replace(/,/g, ".");
+  const val   = parseFloat(raw);
+  if (isNaN(val) || val < 30 || val > 300) { showToast("⚠ 正しい体重を入力してください"); return; }
+  const rounded = Math.round(val * 10) / 10;
+  const wlog = loadWeightLog();
+  wlog[day] = rounded;
+  saveWeightLog(wlog);
+  showToast(day + " : " + rounded + "kg を記録しました");
+  renderWeightTab();
+  renderWeightToday();
 }
 
 // ─── EXPORT ──────────────────────────────────────────────
