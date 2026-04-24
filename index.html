@@ -229,13 +229,14 @@
     <!-- カテゴリ一覧 -->
     <div class="cat-row" id="cat-row"></div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div class="card-title" id="cat-label">野菜</div>
-        <div style="font-size:11px;color:#bbb">糖質の少ない順</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div class="card-title" id="cat-label" style="margin-bottom:0">野菜</div>
       </div>
+      <!-- ソートボタン -->
+      <div id="sort-row" style="display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;margin-bottom:4px"></div>
       <div class="food-header">
         <span style="flex:1">食材名</span>
-        <span style="width:52px;text-align:center">糖質</span>
+        <span id="sort-header-label" style="width:58px;text-align:center">糖質</span>
         <span style="width:40px;text-align:center">kcal</span>
         <span style="width:58px;text-align:center">量(g)</span>
         <span style="width:24px"></span>
@@ -467,37 +468,37 @@ function toggleFav(food) {
 
 const FOOD_DB = {
   "野菜":[
-    {name:"レタス",carbs:1.2,kcal:17,protein:1.2,fat:0.3,fiber:2.1},
-    {name:"セロリ",carbs:1.4,kcal:16,protein:0.7,fat:0.2,fiber:1.6},
-    {name:"ほうれん草",carbs:1.4,kcal:23,protein:2.9,fat:0.4,fiber:2.2},
-    {name:"チンゲン菜",carbs:1.2,kcal:13,protein:1.5,fat:0.2,fiber:1.0},
-    {name:"ルッコラ",carbs:1.4,kcal:19,protein:2.6,fat:0.4,fiber:1.6},
-    {name:"ケール",carbs:1.9,kcal:28,protein:2.1,fat:0.4,fiber:3.7},
-    {name:"アスパラ",carbs:1.8,kcal:20,protein:2.2,fat:0.1,fiber:2.1},
-    {name:"アボカド",carbs:1.8,kcal:160,protein:2.0,fat:14.7,fiber:6.7},
-    {name:"ラディッシュ",carbs:1.8,kcal:16,protein:0.7,fat:0.1,fiber:1.6},
-    {name:"白菜",carbs:2.0,kcal:16,protein:1.2,fat:0.2,fiber:1.2},
-    {name:"ズッキーニ",carbs:2.1,kcal:17,protein:1.2,fat:0.3,fiber:1.0},
-    {name:"きゅうり",carbs:2.2,kcal:16,protein:0.7,fat:0.1,fiber:0.5},
-    {name:"きのこ",carbs:2.3,kcal:22,protein:3.1,fat:0.3,fiber:1.0},
-    {name:"マッシュルーム",carbs:0.1,kcal:11,protein:2.9,fat:0.3,fiber:2.0},
-    {name:"平茸（ヒラタケ）",carbs:0.9,kcal:20,protein:2.6,fat:0.3,fiber:2.6},
-    {name:"トマト",carbs:2.7,kcal:18,protein:0.9,fat:0.2,fiber:1.2},
-    {name:"ナス",carbs:2.9,kcal:25,protein:1.0,fat:0.2,fiber:3.0},
-    {name:"カリフラワー",carbs:3.0,kcal:25,protein:1.9,fat:0.3,fiber:2.0},
-    {name:"オリーブ",carbs:3.1,kcal:115,protein:0.8,fat:10.9,fiber:3.2},
-    {name:"キャベツ",carbs:3.3,kcal:25,protein:1.3,fat:0.1,fiber:2.5},
-    {name:"ピーマン赤",carbs:3.9,kcal:31,protein:1.0,fat:0.3,fiber:2.1},
-    {name:"ブロッコリー",carbs:4.0,kcal:34,protein:2.8,fat:0.4,fiber:2.6},
-    {name:"にんにく",carbs:6.5,kcal:136,protein:6.4,fat:0.9,fiber:6.2},
-    {name:"生姜",carbs:6.6,kcal:30,protein:0.9,fat:0.3,fiber:2.1},
-    {name:"長ねぎ",carbs:4.7,kcal:32,protein:1.8,fat:0.2,fiber:2.6},
-    {name:"レモン",carbs:7.6,kcal:54,protein:0.9,fat:0.7,fiber:4.9},
-    {name:"かぼちゃ",carbs:6.0,kcal:26,protein:1.0,fat:0.1,fiber:0.5},
-    {name:"にんじん",carbs:6.8,kcal:41,protein:0.9,fat:0.2,fiber:2.8},
-    {name:"玉ねぎ",carbs:7.6,kcal:40,protein:1.1,fat:0.1,fiber:1.7},
-    {name:"じゃがいも",carbs:15.4,kcal:77,protein:2.0,fat:0.1,fiber:2.1},
-    {name:"とうもろこし",carbs:16.3,kcal:86,protein:3.2,fat:1.2,fiber:2.7}
+    {name:"マッシュルーム",    carbs:0.1,kcal:11, protein:2.9,fat:0.3,fiber:2.0, mg:9},
+    {name:"平茸（ヒラタケ）", carbs:0.9,kcal:20, protein:2.6,fat:0.3,fiber:2.6, mg:12},
+    {name:"レタス",            carbs:1.2,kcal:17, protein:1.2,fat:0.3,fiber:2.1, mg:8},
+    {name:"チンゲン菜",        carbs:1.2,kcal:13, protein:1.5,fat:0.2,fiber:1.0, mg:16},
+    {name:"セロリ",            carbs:1.4,kcal:16, protein:0.7,fat:0.2,fiber:1.6, mg:11},
+    {name:"ほうれん草",        carbs:1.4,kcal:23, protein:2.9,fat:0.4,fiber:2.2, mg:58},
+    {name:"ルッコラ",          carbs:1.4,kcal:19, protein:2.6,fat:0.4,fiber:1.6, mg:47},
+    {name:"アスパラ",          carbs:1.8,kcal:20, protein:2.2,fat:0.1,fiber:2.1, mg:12},
+    {name:"アボカド",          carbs:1.8,kcal:160,protein:2.0,fat:14.7,fiber:6.7, mg:29},
+    {name:"ラディッシュ",      carbs:1.8,kcal:16, protein:0.7,fat:0.1,fiber:1.6, mg:10},
+    {name:"白菜",              carbs:2.0,kcal:16, protein:1.2,fat:0.2,fiber:1.2, mg:10},
+    {name:"ズッキーニ",        carbs:2.1,kcal:17, protein:1.2,fat:0.3,fiber:1.0, mg:18},
+    {name:"きゅうり",          carbs:2.2,kcal:16, protein:0.7,fat:0.1,fiber:0.5, mg:13},
+    {name:"きのこ",            carbs:2.3,kcal:22, protein:3.1,fat:0.3,fiber:1.0, mg:10},
+    {name:"トマト",            carbs:2.7,kcal:18, protein:0.9,fat:0.2,fiber:1.2, mg:9},
+    {name:"ナス",              carbs:2.9,kcal:25, protein:1.0,fat:0.2,fiber:3.0, mg:14},
+    {name:"カリフラワー",      carbs:3.0,kcal:25, protein:1.9,fat:0.3,fiber:2.0, mg:15},
+    {name:"オリーブ",          carbs:3.1,kcal:115,protein:0.8,fat:10.9,fiber:3.2, mg:4},
+    {name:"キャベツ",          carbs:3.3,kcal:25, protein:1.3,fat:0.1,fiber:2.5, mg:14},
+    {name:"ピーマン赤",        carbs:3.9,kcal:31, protein:1.0,fat:0.3,fiber:2.1, mg:12},
+    {name:"ブロッコリー",      carbs:4.0,kcal:34, protein:2.8,fat:0.4,fiber:2.6, mg:21},
+    {name:"ケール",            carbs:1.9,kcal:28, protein:2.1,fat:0.4,fiber:3.7, mg:34},
+    {name:"長ねぎ",            carbs:4.7,kcal:32, protein:1.8,fat:0.2,fiber:2.6, mg:11},
+    {name:"にんにく",          carbs:6.5,kcal:136,protein:6.4,fat:0.9,fiber:6.2, mg:25},
+    {name:"生姜",              carbs:6.6,kcal:30, protein:0.9,fat:0.3,fiber:2.1, mg:43},
+    {name:"かぼちゃ",          carbs:6.0,kcal:26, protein:1.0,fat:0.1,fiber:0.5, mg:12},
+    {name:"にんじん",          carbs:6.8,kcal:41, protein:0.9,fat:0.2,fiber:2.8, mg:10},
+    {name:"レモン",            carbs:7.6,kcal:54, protein:0.9,fat:0.7,fiber:4.9, mg:8},
+    {name:"玉ねぎ",            carbs:7.6,kcal:40, protein:1.1,fat:0.1,fiber:1.7, mg:9},
+    {name:"じゃがいも",        carbs:15.4,kcal:77,protein:2.0,fat:0.1,fiber:2.1, mg:19},
+    {name:"とうもろこし",      carbs:16.3,kcal:86,protein:3.2,fat:1.2,fiber:2.7, mg:37}
   ],
   "卵・肉類":[
     {name:"卵（全卵）",carbs:0.2,kcal:151,protein:12.3,fat:10.3,fiber:0},
@@ -529,9 +530,9 @@ const FOOD_DB = {
   ],
   "チーズ類":[
     // アルメニアチーズ
-    {name:"チェチル ",  carbs:1.5,kcal:260,protein:28.0,fat:16.0,fiber:0,
+    {name:"チェチル（ストリング）",  carbs:1.5,kcal:260,protein:28.0,fat:16.0,fiber:0,
      salt:"高", desc:"細い糸状に引き伸ばして束ねた繊維質チーズ。牛乳または山羊乳から作り、塩水で洗いながら手で何度も延ばして形成。低脂肪・高タンパクでケトに優秀。シラク地方の郷土チーズ。"},
-    {name:"チェチル   (スモーク)",      carbs:1.5,kcal:265,protein:28.0,fat:16.0,fiber:0,
+    {name:"チェチル・スモーク",      carbs:1.5,kcal:265,protein:28.0,fat:16.0,fiber:0,
      salt:"高", desc:"チェチルを木材で燻製にしたもの。琥珀色〜茶色の外観。スモークの香りが加わり風味が豊か。塩分はやや高め。おつまみ・サラダに最適。"},
     {name:"チャナフ",                carbs:0.5,kcal:290,protein:19.0,fat:23.0,fiber:0,
      salt:"最高", desc:"塩水（ブライン）漬けの白いチーズ。牛乳製でホロホロとした食感。塩気が非常に強く、水に浸して塩抜きして食べることも。アルメニア・ジョージア発祥のフェタ類似チーズ。"},
@@ -539,7 +540,7 @@ const FOOD_DB = {
      salt:"高", desc:"「埋められたチーズ」の意。牛乳・山羊乳・羊乳の混合にハーブ・根・種子を加え、素焼きの壺に入れて地中に6ヶ月以上埋めて熟成。超濃厚でコクが深く、ハーブの強い香りが特徴。ヴァヨツ・ゾル州の希少な伝統チーズ。"},
     {name:"モタル",                  carbs:0.5,kcal:290,protein:19.0,fat:24.0,fiber:0,
      salt:"中〜高", desc:"山羊乳または羊乳から作る山岳地帯の伝統チーズ。山のハーブをふんだんに混ぜ込み、テラコッタ（素焼き壺）で4〜5ヶ月以上熟成。クリーミーで香り豊か。遊牧民が作る希少品。"},
-    {name:"イェヘグナ ゾール",        carbs:0.5,kcal:295,protein:20.0,fat:24.0,fiber:0,
+    {name:"イェヘグナゾール",        carbs:0.5,kcal:295,protein:20.0,fat:24.0,fiber:0,
      salt:"高", desc:"ホラツと同じヴァヨツ・ゾル州産。山羊乳製で砕けやすいテクスチャー。山のスパイスとハーブが豊かに香り、素焼き壺で熟成。ホラツの地域別名でもある。"},
     {name:"スルグニ",                carbs:2.0,kcal:285,protein:21.0,fat:22.0,fiber:0,
      salt:"中", desc:"ジョージア原産でアルメニアでも広く普及。モッツァレラに似たフレッシュタイプ。塩水で保存し、加熱するとよく伸びる。揚げたり焼いたりして食べることも多い。"},
@@ -550,7 +551,7 @@ const FOOD_DB = {
     {name:"パニール",                carbs:3.5,kcal:318,protein:21.0,fat:25.0,fiber:0,
      salt:"低", desc:"インド・中東・コーカサス地方のフレッシュチーズ。牛乳または水牛乳をレモン汁・酢で凝固させて作る。加熱しても溶けない特徴を持つ。塩分は低くカルシウムが豊富。"},
     // 一般チーズ
-    {name:"クリーム   チーズ",          carbs:2.3,kcal:346,protein:8.2, fat:33.0,fiber:0,
+    {name:"クリームチーズ",          carbs:2.3,kcal:346,protein:8.2, fat:33.0,fiber:0,
      salt:"低〜中", desc:"生クリームと乳を合わせた軟質フレッシュチーズ。ペースト状で塗りやすい。熟成なし。マイルドでクリーミーな風味。"},
     {name:"パルメザン",              carbs:1.9,kcal:475,protein:44.0,fat:30.9,fiber:0,
      salt:"高", desc:"イタリア産ハードチーズ。12ヶ月以上熟成。粉末にして使うことが多い。旨味が凝縮されており少量で風味が出る。"},
@@ -562,7 +563,7 @@ const FOOD_DB = {
      salt:"高", desc:"ギリシャ原産の塩水漬けチーズ。羊乳または山羊乳製。ホロホロとした食感で塩気が強い。チャナフに近い風味。"},
     {name:"ブルーチーズ",            carbs:2.3,kcal:353,protein:21.4,fat:28.7,fiber:0,
      salt:"高", desc:"青カビで熟成させたチーズ。独特の強い風味とピリッとした辛み。少量で風味が強く出る。"},
-    {name:"カッテージ チーズ",        carbs:1.9,kcal:105,protein:13.3,fat:4.5, fiber:0,
+    {name:"カッテージチーズ",        carbs:1.9,kcal:105,protein:13.3,fat:4.5, fiber:0,
      salt:"低", desc:"低脂肪のフレッシュチーズ。粒状のカードが特徴。淡白な味でタンパク質が豊富。"},
     {name:"リコッタ",                carbs:3.0,kcal:174,protein:11.3,fat:13.0,fiber:0,
      salt:"低", desc:"イタリア産。ホエイ（乳清）から作るリサイクルチーズ。ふんわりと軽い食感でほんのり甘い。"},
@@ -584,13 +585,14 @@ const FOOD_DB = {
     {name:"辣油（ラー油）",carbs:1.4,kcal:919,protein:1.0,fat:97.0,fiber:0}
   ],
   "ナッツ類":[
-    {name:"マカダミアナッツ",carbs:2.6,kcal:748,protein:7.9,fat:76.0,fiber:5.3},
-    {name:"ペカン",carbs:3.8,kcal:718,protein:9.5,fat:72.0,fiber:9.5},
-    {name:"クルミ",carbs:3.4,kcal:674,protein:14.6,fat:68.8,fiber:7.5},
-    {name:"アーモンド",carbs:4.4,kcal:609,protein:20.3,fat:51.8,fiber:8.8},
-    {name:"ピスタチオ",carbs:6.9,kcal:617,protein:20.2,fat:45.3,fiber:9.0},
-    {name:"ピーナッツ",carbs:8.5,kcal:613,protein:25.4,fat:49.4,fiber:8.5},
-    {name:"カシューナッツ",carbs:20.0,kcal:576,protein:15.7,fat:47.8,fiber:3.3}
+    {name:"マカダミアナッツ", carbs:2.6,kcal:748,protein:7.9, fat:76.0,fiber:5.3, mg:130},
+    {name:"ペカン",           carbs:3.8,kcal:718,protein:9.5, fat:72.0,fiber:9.5, mg:121},
+    {name:"クルミ",           carbs:3.4,kcal:674,protein:14.6,fat:68.8,fiber:7.5, mg:158},
+    {name:"アーモンド",       carbs:4.4,kcal:609,protein:20.3,fat:51.8,fiber:8.8, mg:270},
+    {name:"ピスタチオ",       carbs:6.9,kcal:617,protein:20.2,fat:45.3,fiber:9.0, mg:121},
+    {name:"ピーナッツ",       carbs:8.5,kcal:613,protein:25.4,fat:49.4,fiber:8.5, mg:168},
+    {name:"カシューナッツ",   carbs:20.0,kcal:576,protein:15.7,fat:47.8,fiber:3.3, mg:292},
+    {name:"カボチャの種",     carbs:4.7,kcal:574,protein:30.2,fat:49.1,fiber:6.0, mg:592},
   ],
   "調味料":[
     {name:"醤油",carbs:7.9,kcal:71,protein:7.7,fat:0.0,fiber:0},
@@ -619,6 +621,7 @@ const FOOD_DB = {
 // ─── STATE ───────────────────────────────────────────────
 let currentTab = "today";
 let currentCat = "野菜";
+let currentSort = "carbs"; // デフォルト：糖質の低い順
 let openDetail = null;
 let expandDay  = null;
 let gramValues = {};
@@ -691,6 +694,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("header-date").textContent =
     today + " · 糖質20g以下 / 1500kcal（18h断食）";
   renderCatButtons();
+  renderSortButtons();
   renderFoodList();
   renderToday();
   renderHistory();
@@ -735,6 +739,45 @@ function formatDate(dateStr) {
   return parseInt(p[1]) + "月" + parseInt(p[2]) + "日";
 }
 
+// ─── SORT BUTTONS ────────────────────────────────────────
+const SORT_OPTIONS = [
+  { key:"carbs",   label:"糖質↑" },
+  { key:"fiber",   label:"繊維↑" },
+  { key:"protein", label:"タンパク↑" },
+  { key:"fat",     label:"脂質↑" },
+  { key:"mg",      label:"Mg↑" },
+];
+
+function renderSortButtons() {
+  const row = document.getElementById("sort-row");
+  if (!row) return;
+  // Mgは野菜とナッツのみ表示
+  const showMg = (currentCat === "野菜" || currentCat === "ナッツ類" || currentCat === "よく使う");
+  row.innerHTML = "";
+  SORT_OPTIONS.forEach(function(opt) {
+    if (opt.key === "mg" && !showMg) return;
+    const btn = document.createElement("button");
+    const isActive = (currentSort === opt.key);
+    btn.textContent = opt.label;
+    btn.style.cssText = "border:none;border-radius:14px;padding:4px 10px;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;" +
+      "font-weight:" + (isActive?"700":"400") + ";" +
+      "background:" + (isActive?"#1565c0":"#ebebeb") + ";" +
+      "color:" + (isActive?"#fff":"#666") + ";";
+    btn.onclick = function() { currentSort = opt.key; renderSortButtons(); renderFoodList(); };
+    row.appendChild(btn);
+  });
+}
+
+function sortFoods(foods) {
+  return foods.slice().sort(function(a, b) {
+    if (currentSort === "mg") return (b.mg||0) - (a.mg||0);
+    if (currentSort === "fiber")   return (b.fiber||0)   - (a.fiber||0);
+    if (currentSort === "protein") return (b.protein||0) - (a.protein||0);
+    if (currentSort === "fat")     return (b.fat||0)     - (a.fat||0);
+    return (a.carbs||0) - (b.carbs||0); // デフォルト：糖質低い順
+  });
+}
+
 // ─── CATEGORY BUTTONS ────────────────────────────────────
 function renderCatButtons() {
   const row = document.getElementById("cat-row");
@@ -750,7 +793,7 @@ function renderCatButtons() {
     btn.style.background = isActive ? (CAT_COLORS[cat] || "#c62828") : "#ebebeb";
     btn.style.color      = isActive ? "#fff" : "#555";
     btn.style.fontWeight = isActive ? "700" : "500";
-    btn.onclick = () => { currentCat = cat; openDetail = null; renderCatButtons(); renderFoodList(); };
+    btn.onclick = () => { currentCat = cat; openDetail = null; renderCatButtons(); renderSortButtons(); renderFoodList(); };
     row.appendChild(btn);
   });
   document.getElementById("cat-label").textContent = currentCat === "よく使う" ? "⭐ よく使う" : currentCat;
@@ -759,19 +802,19 @@ function renderCatButtons() {
 // ─── FOOD LIST ───────────────────────────────────────────
 function renderFoodList() {
   document.getElementById("cat-label").textContent = currentCat === "よく使う" ? "⭐ よく使う" : currentCat;
+  renderSortButtons();
   const list = document.getElementById("food-list");
   list.innerHTML = "";
 
-  // よく使うカテゴリの場合はlocalStorageから
   let foods;
   if (currentCat === "よく使う") {
-    foods = loadFavs().slice().sort((a,b) => a.carbs - b.carbs);
+    foods = sortFoods(loadFavs());
     if (foods.length === 0) {
       list.innerHTML = '<div class="empty" style="padding:24px 0">まだ登録がありません<br>各食材の ⭐ をタップして追加してください</div>';
       return;
     }
   } else {
-    foods = [...(FOOD_DB[currentCat] || [])].sort((a,b) => a.carbs - b.carbs);
+    foods = sortFoods([...(FOOD_DB[currentCat] || [])]);
   }
 
   foods.forEach(food => {
@@ -790,11 +833,28 @@ function renderFoodList() {
       renderFoodList();
     };
 
-    // Carbs
+    // ソートキーに応じた表示値の設定
+    const SORT_DISPLAY = {
+      carbs:   { value: food.carbs,           unit: "g",  colorFn: (v) => carbsColor(v) },
+      fiber:   { value: food.fiber || 0,       unit: "g",  colorFn: (v) => v >= 5 ? "#2e7d32" : v >= 3 ? "#558b2f" : v >= 1 ? "#f57f17" : "#bbb" },
+      protein: { value: food.protein || 0,     unit: "g",  colorFn: (v) => v >= 20 ? "#1565c0" : v >= 10 ? "#1976d2" : v >= 5 ? "#42a5f5" : "#bbb" },
+      fat:     { value: food.fat || 0,         unit: "g",  colorFn: (v) => v >= 50 ? "#e65100" : v >= 20 ? "#ef6c00" : v >= 10 ? "#fb8c00" : "#bbb" },
+      mg:      { value: food.mg !== undefined ? food.mg : null, unit: "mg", colorFn: (v) => v >= 100 ? "#2e7d32" : v >= 50 ? "#558b2f" : v >= 20 ? "#f57f17" : "#bbb" },
+    };
+    const disp = SORT_DISPLAY[currentSort] || SORT_DISPLAY.carbs;
+    const dispVal = disp.value;
+    const dispText = dispVal !== null && dispVal !== undefined ? dispVal + disp.unit : "-";
+    const dispColor = dispVal !== null && dispVal !== undefined ? disp.colorFn(dispVal) : "#ccc";
+
+    // ヘッダーラベル更新
+    const hdrLabels = { carbs:"糖質", fiber:"食物繊維", protein:"タンパク質", fat:"脂質", mg:"Mg" };
+    const hdrEl = document.getElementById("sort-header-label");
+    if (hdrEl) hdrEl.textContent = hdrLabels[currentSort] || "糖質";
+
+    // Carbs（表示値）
     const carbsDiv = document.createElement("div");
-    carbsDiv.className = "food-carbs";
-    carbsDiv.style.cssText = `color:${carbsColor(food.carbs)};width:52px;text-align:center;font-size:13px;font-weight:700`;
-    carbsDiv.textContent = food.carbs + "g";
+    carbsDiv.style.cssText = "width:58px;text-align:center;font-size:13px;font-weight:700;color:" + dispColor;
+    carbsDiv.textContent = dispText;
 
     // Kcal
     const kcalDiv = document.createElement("div");
@@ -864,6 +924,9 @@ function renderFoodList() {
       let saltRow = food.salt
         ? '<span>塩分レベル</span><span style="font-weight:700;color:' + saltColor + '">' + food.salt + '</span>'
         : "";
+      let mgRow = food.mg !== undefined
+        ? '<span>Mg（マグネシウム）</span><span style="font-weight:700;color:#00838f">' + food.mg + 'mg</span>'
+        : "";
       let descBlock = food.desc
         ? '<div style="margin-top:10px;padding-top:8px;border-top:1px solid #e8f0e8;font-size:12px;color:#555;line-height:1.7">' +
           '<div style="font-size:10px;font-weight:700;color:#888;letter-spacing:1px;margin-bottom:4px">特徴・製法</div>' +
@@ -877,7 +940,7 @@ function renderFoodList() {
           '<span>脂質</span><span style="font-weight:700;color:#e65100">' + food.fat + 'g</span>' +
           '<span>カロリー</span><span style="font-weight:700;color:#6a1b9a">' + food.kcal + 'kcal</span>' +
           '<span>食物繊維</span><span style="font-weight:700;color:#2e7d32">' + food.fiber + 'g</span>' +
-          saltRow +
+          mgRow + saltRow +
         '</div>' +
         '<div class="detail-note">※100gあたり</div>' +
         descBlock;
