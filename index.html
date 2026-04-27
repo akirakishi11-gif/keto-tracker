@@ -165,8 +165,8 @@
         <div class="macro-track"><div class="macro-fill" id="b-protein" style="background:#1565c0;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">糖質</span><span class="macro-val"><strong id="v-carbs" style="color:#2e7d32">0</strong><span style="color:#aaa"> / 20g</span></span></div>
-        <div class="macro-track"><div class="macro-fill" id="b-carbs" style="background:#2e7d32;width:0%"></div></div>
+        <div class="macro-head"><span class="macro-label">糖質</span><span class="macro-val"><strong id="v-carbs" style="color:#c62828">0</strong><span style="color:#aaa"> / 20g</span></span></div>
+        <div class="macro-track"><div class="macro-fill" id="b-carbs" style="background:#c62828;width:0%"></div></div>
       </div>
       <div class="macro-row">
         <div class="macro-head"><span class="macro-label">食物繊維</span><span class="macro-val"><strong id="v-fiber" style="color:#00838f">0</strong><span style="color:#aaa"> / 25g</span></span></div>
@@ -194,9 +194,9 @@
           <span style="font-size:12px;color:#666">タンパク</span>
           <span style="font-size:18px;font-weight:800;color:#1565c0" id="s-protein">0g</span>
         </div>
-        <div style="background:#2e7d3212;border-radius:10px;padding:10px 8px;display:flex;justify-content:space-between;align-items:center">
+        <div style="background:#c6282812;border-radius:10px;padding:10px 8px;display:flex;justify-content:space-between;align-items:center">
           <span style="font-size:12px;color:#666">糖質</span>
-          <span style="font-size:18px;font-weight:800;color:#2e7d32" id="s-carbs">0g</span>
+          <span style="font-size:18px;font-weight:800;color:#c62828" id="s-carbs">0g</span>
         </div>
         <div style="background:#00838f12;border-radius:10px;padding:10px 8px;display:flex;justify-content:space-between;align-items:center">
           <span style="font-size:12px;color:#666">食物繊維</span>
@@ -462,7 +462,7 @@ const TARGETS = { calories:1500, fat:117, protein:94, carbs:20 };
 const STORAGE_KEY = "keto_v3_log";
 
 const CAT_COLORS = {
-  "よく使う":"#c62828",
+  "よく使う":"#c62828","全食材":"#37474f",
   "野菜":"#2e7d32","卵類":"#f57f17","肉類":"#b05c00","魚介類":"#01579b",
   "チーズ類":"#ad1457","乳製品":"#6a1b9a","油類":"#e65100","ナッツ類":"#558b2f",
   "調味料":"#795548","ドリンク":"#00838f","水・飲料水":"#0277bd"
@@ -484,6 +484,8 @@ function toggleFav(food) {
 
 const FOOD_DB = {
   "野菜":[
+    {name:"ビーツの葉",          carbs:2.0,kcal:22, protein:2.2,fat:0.3,fiber:3.7, mg:70,  mcfa:0.0,
+     desc:"ビーツ（テーブルビート）の葉。ビタミンK・A・鉄・カリウム・葉酸が豊富。サラダ・炒め物・スープに。2〜3日以内に使用推奨。"},
     {name:"マッシュルーム",    carbs:0.1,kcal:11, protein:2.9,fat:0.3,fiber:2.0, mg:9, mcfa:0.0},
     {name:"平茸（ヒラタケ）", carbs:0.9,kcal:20, protein:2.6,fat:0.3,fiber:2.6, mg:12, mcfa:0.0},
     {name:"レタス",            carbs:1.2,kcal:17, protein:1.2,fat:0.3,fiber:2.1, mg:8, mcfa:0.0},
@@ -626,7 +628,9 @@ const FOOD_DB = {
     {name:"辣油（ラー油）",   carbs:1.4,kcal:919,protein:1.0,fat:97.0, fiber:0, mg:2, mcfa:0.0}
   ],
   "調味料":[
-    {name:"醤油",           carbs:7.9, kcal:71, protein:7.7, fat:0.0, fiber:0,   mg:11, mcfa:0.0},
+    {name:"醤油（ヤキマル）", carbs:0.9, kcal:6,  protein:0.6, fat:0.0, fiber:0,   mg:5,  mcfa:0.0,
+     desc:"ヤキマル社製。甘味料・グルテン・大豆含有。糖質0.9g・タンパク0.6g・脂質0g/100g。"},
+    {name:"醤油（一般）",    carbs:7.9, kcal:71, protein:7.7, fat:0.0, fiber:0,   mg:11, mcfa:0.0},
     {name:"味噌（赤）",     carbs:7.0, kcal:186,protein:13.1,fat:5.5, fiber:4.9, mg:75, mcfa:0.1},
     {name:"味噌（白）",     carbs:13.0,kcal:204,protein:9.7, fat:4.5, fiber:2.8, mg:30, mcfa:0.1},
     {name:"みりん",         carbs:54.5,kcal:241,protein:0.3, fat:0.0, fiber:0,   mg:7, mcfa:0.0},
@@ -635,7 +639,11 @@ const FOOD_DB = {
     {name:"マヨネーズ",     carbs:2.3, kcal:703,protein:1.9, fat:75.3,fiber:0,   mg:4, mcfa:0.1},
     {name:"ケチャップ",     carbs:25.9,kcal:104,protein:1.7, fat:0.2, fiber:1.7, mg:18, mcfa:0.0},
     {name:"スリラチャ",     carbs:11.0,kcal:93, protein:1.1, fat:0.5, fiber:1.0, mg:15, mcfa:0.0},
-    {name:"白胡麻ペースト", carbs:3.4, kcal:595,protein:17.0,fat:53.8,fiber:9.3, mg:362, mcfa:0.1}
+    {name:"白胡麻ペースト", carbs:3.4, kcal:595,protein:17.0,fat:53.8,fiber:9.3, mg:362, mcfa:0.0},
+    {name:"花かつお（鰹節）", carbs:0.0, kcal:356,protein:75.7,fat:3.2, fiber:0,   mg:70,  mcfa:0.0,
+     desc:"カツオを燻製・発酵・乾燥させた薄削り。グルタミン酸・イノシン酸の旨味成分が豊富。だし・トッピングに。"},
+    {name:"昆布（乾燥）",     carbs:6.2, kcal:138,protein:8.2, fat:1.2, fiber:27.1,mg:540, mcfa:0.0,
+     desc:"乾燥昆布。グルタミン酸の旨味成分が豊富。食物繊維・ヨウ素・Mgが非常に多い（540mg）。だし取りや煮物に。"}
   ],
   "ドリンク":[
     {name:"コーヒー（ブラック）",  carbs:0.0,kcal:4,  protein:0.3,fat:0.1,fiber:0,   mg:8, mcfa:0.0},
@@ -836,8 +844,8 @@ function renderCatButtons() {
   const row = document.getElementById("cat-row");
   row.innerHTML = "";
 
-  // よく使うを先頭に
-  var allCats = ["よく使う"].concat(Object.keys(FOOD_DB));
+  // よく使う・全食材を先頭に
+  var allCats = ["よく使う", "全食材"].concat(Object.keys(FOOD_DB));
   allCats.forEach(cat => {
     const btn = document.createElement("button");
     btn.className = "cat-btn";
@@ -866,6 +874,15 @@ function renderFoodList() {
       list.innerHTML = '<div class="empty" style="padding:24px 0">まだ登録がありません<br>各食材の ⭐ をタップして追加してください</div>';
       return;
     }
+  } else if (currentCat === "全食材") {
+    // 全カテゴリの食材を結合
+    let all = [];
+    Object.entries(FOOD_DB).forEach(function([cat, items]) {
+      items.forEach(function(f) {
+        all.push(Object.assign({}, f, {_origCat: cat}));
+      });
+    });
+    foods = sortFoods(all);
   } else {
     foods = sortFoods([...(FOOD_DB[currentCat] || [])]);
   }
@@ -880,7 +897,17 @@ function renderFoodList() {
     // Name
     const nameDiv = document.createElement("div");
     nameDiv.className = "food-name";
-    nameDiv.textContent = food.name;
+    nameDiv.style.cssText = "flex:1;min-width:0;overflow:hidden;cursor:pointer";
+    const nameText = document.createElement("div");
+    nameText.style.cssText = "font-size:15px;font-weight:600;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
+    nameText.textContent = food.name;
+    nameDiv.appendChild(nameText);
+    if (currentCat === "全食材" && food._origCat) {
+      const catLabel = document.createElement("div");
+      catLabel.style.cssText = "font-size:10px;color:" + (CAT_COLORS[food._origCat] || "#aaa") + ";margin-top:1px;font-weight:600";
+      catLabel.textContent = food._origCat;
+      nameDiv.appendChild(catLabel);
+    }
     nameDiv.onclick = () => {
       openDetail = openDetail === food.name ? null : food.name;
       renderFoodList();
@@ -928,7 +955,7 @@ function renderFoodList() {
     inp.style.width = "52px";
     inp.inputMode = "numeric";
     inp.pattern = "[0-9]*";
-    inp.value = gramValues[food.name] !== undefined ? gramValues[food.name] : (currentCat === "水・飲料水" ? 250 : 100);
+    inp.value = gramValues[food.name] !== undefined ? gramValues[food.name] : 100;
 
     inp.addEventListener("focus", () => inp.select());
     inp.addEventListener("wheel", e => e.preventDefault(), { passive: false });
@@ -1102,7 +1129,7 @@ function renderToday() {
 
   // Macro bars
   const macros = [
-    { id:"carbs",   val:t.carbs,   target:TARGETS.carbs,    color:"#2e7d32" },
+    { id:"carbs",   val:t.carbs,   target:TARGETS.carbs,    color:"#c62828" },
     { id:"protein", val:t.protein, target:TARGETS.protein,  color:"#1565c0" },
     { id:"fat",     val:t.fat,     target:TARGETS.fat,      color:"#e65100" },
     { id:"kcal",    val:t.kcal,    target:TARGETS.calories, color:"#6a1b9a" },
@@ -1155,7 +1182,7 @@ function renderToday() {
           '<span class="tag" style="background:#c6282818;color:#c62828">糖質 ' + e.carbs + 'g</span>' +
           '<span class="tag" style="background:#1565c018;color:#1565c0">P ' + e.protein + 'g</span>' +
           '<span class="tag" style="background:#e6510018;color:#e65100">F ' + e.fat + 'g</span>' +
-          '<span class="tag" style="background:#55555518;color:#555">' + e.kcal + 'kcal</span>' +
+          '<span class="tag" style="background:#6a1b9a18;color:#6a1b9a">' + e.kcal + 'kcal</span>' +
           fiberTag + mgTag + mcfaTag +
         '</div>' +
         '<div class="entry-meta">' + (e.time||"") + ' · ' + e.category + '</div>' +
@@ -1369,7 +1396,7 @@ function selectCalDate(dateStr) {
       t.carbs   += (e.carbs   || 0);
       t.fiber   += (e.fiber   || 0);
     });
-    var carbsOver = t.carbs > 20;
+    var carbsOver = t.carbs > 20; // 糖質は常に赤系
     summaryEl.style.cssText = "display:block;margin-bottom:12px";
     summaryEl.innerHTML =
       '<div style="font-size:11px;font-weight:700;color:#888;letter-spacing:1px;margin-bottom:8px">この日の合計栄養</div>' +
@@ -1417,7 +1444,7 @@ function selectCalDate(dateStr) {
           '<span class="tag" style="background:#c6282818;color:#c62828">糖質 ' + e.carbs + 'g</span>' +
           '<span class="tag" style="background:#1565c018;color:#1565c0">P ' + e.protein + 'g</span>' +
           '<span class="tag" style="background:#e6510018;color:#e65100">F ' + e.fat + 'g</span>' +
-          '<span class="tag" style="background:#55555518;color:#555">' + e.kcal + 'kcal</span>' +
+          '<span class="tag" style="background:#6a1b9a18;color:#6a1b9a">' + e.kcal + 'kcal</span>' +
           fiberTag +
         '</div>' +
         '<div style="font-size:11px;color:#bbb;margin-top:3px">' + (e.time || "") + ' · ' + e.category + '</div>' +
@@ -1473,8 +1500,8 @@ function renderModalCatButtons() {
   var row = document.getElementById("modal-cat-row");
   if (!row) return;
   row.innerHTML = "";
-  // よく使うを先頭に
-  var allCats = ["よく使う"].concat(Object.keys(FOOD_DB));
+  // よく使う・全食材を先頭に
+  var allCats = ["よく使う", "全食材"].concat(Object.keys(FOOD_DB));
   allCats.forEach(function(cat) {
     var btn = document.createElement("button");
     btn.textContent = cat === "よく使う" ? "⭐ よく使う" : cat;
@@ -1516,6 +1543,12 @@ function modalShowCat(cat) {
       if (c) c.innerHTML = '<div style="text-align:center;color:#bbb;padding:24px;font-size:13px">まだ登録がありません<br>食材の ⭐ をタップして追加</div>';
       return;
     }
+  } else if (cat === "全食材") {
+    foods = [];
+    Object.entries(FOOD_DB).forEach(function(entry) {
+      entry[1].forEach(function(f) { foods.push(Object.assign({}, f, {category: entry[0]})); });
+    });
+    foods.sort(function(a,b){ return a.carbs - b.carbs; });
   } else {
     foods = (FOOD_DB[cat] || []).slice().sort(function(a,b){ return a.carbs - b.carbs; });
     foods = foods.map(function(f){ return Object.assign({}, f, {category: cat}); });
