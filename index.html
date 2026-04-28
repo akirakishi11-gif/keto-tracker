@@ -212,6 +212,17 @@
         </div>
       </div>
     </div>
+    <!-- PFCバランス -->
+    <div class="card" id="pfc-card">
+      <div class="card-title">PFCバランス</div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <canvas id="pfc-canvas" width="110" height="110" style="flex-shrink:0"></canvas>
+        <div style="flex:1">
+          <div id="pfc-legend"></div>
+          <div id="pfc-kcal-detail" style="margin-top:8px;font-size:11px;color:#aaa;line-height:1.8"></div>
+        </div>
+      </div>
+    </div>
     <!-- 日付の記録 -->
     <div class="card">
       <div class="card-title" id="today-count">記録（0件）</div>
@@ -640,6 +651,8 @@ const FOOD_DB = {
     {name:"ケチャップ",     carbs:25.9,kcal:104,protein:1.7, fat:0.2, fiber:1.7, mg:18, mcfa:0.0},
     {name:"スリラチャ",     carbs:11.0,kcal:93, protein:1.1, fat:0.5, fiber:1.0, mg:15, mcfa:0.0},
     {name:"白胡麻ペースト", carbs:3.4, kcal:595,protein:17.0,fat:53.8,fiber:9.3, mg:362, mcfa:0.0},
+    {name:"干し椎茸（乾燥）",   carbs:22.4,kcal:258,protein:19.3,fat:3.7, fiber:41.0,mg:110, mcfa:0.0,
+     desc:"乾燥椎茸。グアニル酸の旨味成分が豊富。食物繊維・ビタミンD・エルゴステロール含有。だし・煮物・炒め物に。水で戻して使用。"},
     {name:"花かつお（鰹節）", carbs:0.0, kcal:356,protein:75.7,fat:3.2, fiber:0,   mg:70,  mcfa:0.0,
      desc:"カツオを燻製・発酵・乾燥させた薄削り。グルタミン酸・イノシン酸の旨味成分が豊富。だし・トッピングに。"},
     {name:"昆布（乾燥）",     carbs:6.2, kcal:138,protein:8.2, fat:1.2, fiber:27.1,mg:540, mcfa:0.0,
@@ -1154,6 +1167,9 @@ function renderToday() {
   document.getElementById("s-fiber").textContent   = Math.round(t.fiber*10)/10 + "g";
   document.getElementById("s-mg").textContent      = Math.round(t.mg*10)/10 + "mg";
   document.getElementById("s-mcfa").textContent    = Math.round(t.mcfa*10)/10 + "g";
+
+  // PFCグラフ描画
+  drawPFC(t);
 
   // Keto score
   const ks = Math.max(0, Math.min(100, Math.round(100 - (t.carbs / TARGETS.carbs) * 100)));
@@ -1838,6 +1854,99 @@ function addFromAI(foodJson) {
   document.getElementById("ai-result").innerHTML = "";
   switchTab("today");
   renderToday();
+}
+
+
+// ─── PFC BALANCE ─────────────────────────────────────────
+function drawPFC(t) {
+  const canvas = document.getElementById("pfc-canvas");
+  const legend = document.getElementById("pfc-legend");
+  const detail = document.getElementById("pfc-kcal-detail");
+  if (!canvas || !legend) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width  = 110 * dpr;
+  canvas.height = 110 * dpr;
+  canvas.style.width  = "110px";
+  canvas.style.height = "110px";
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, 110, 110);
+
+  // カロリー換算
+  const pKcal = t.protein * 4;
+  const fKcal = t.fat     * 9;
+  const cKcal = t.carbs   * 4;
+  const total = pKcal + fKcal + cKcal;
+
+  const cx = 55, cy = 55, r = 44, inner = 26;
+  const segments = [
+    { label:"タンパク質", kcal: pKcal, color:"#1565c0" },
+    { label:"脂質",       kcal: fKcal, color:"#e65100" },
+    { label:"糖質",       kcal: cKcal, color:"#c62828" },
+  ];
+
+  if (total <= 0) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+    ctx.fillStyle = "#f0f0f0";
+    ctx.fill();
+    ctx.fillStyle = "#ccc";
+    ctx.font = "10px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("記録なし", cx, cy + 4);
+    legend.innerHTML = "";
+    detail.innerHTML = "";
+    return;
+  }
+
+  let angle = -Math.PI / 2;
+  segments.forEach(function(seg) {
+    const slice = (seg.kcal / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + slice);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    angle += slice;
+  });
+
+  // 中抜き
+  ctx.beginPath();
+  ctx.arc(cx, cy, inner, 0, Math.PI * 2);
+  ctx.fillStyle = "#fff";
+  ctx.fill();
+
+  // 中央にkcal
+  ctx.fillStyle = "#1a1a1a";
+  ctx.font = "bold 13px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(Math.round(t.kcal), cx, cy + 2);
+  ctx.fillStyle = "#aaa";
+  ctx.font = "9px sans-serif";
+  ctx.fillText("kcal", cx, cy + 13);
+
+  // 凡例
+  legend.innerHTML = segments.map(function(seg) {
+    var pct = total > 0 ? Math.round(seg.kcal / total * 100) : 0;
+    return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">' +
+      '<div style="width:10px;height:10px;border-radius:3px;background:' + seg.color + ';flex-shrink:0"></div>' +
+      '<span style="font-size:12px;color:#555;flex:1">' + seg.label + '</span>' +
+      '<span style="font-size:13px;font-weight:700;color:' + seg.color + '">' + pct + '%</span>' +
+    '</div>';
+  }).join('');
+
+  // 詳細
+  var pPct = total > 0 ? Math.round(pKcal / total * 100) : 0;
+  var fPct = total > 0 ? Math.round(fKcal / total * 100) : 0;
+  var cPct = total > 0 ? Math.round(cKcal / total * 100) : 0;
+  // ケト理想比率との比較
+  var ketoOk = fPct >= 60 && pPct >= 20 && cPct <= 10;
+  detail.innerHTML =
+    '<div style="color:' + (ketoOk ? '#2e7d32' : '#f57f17') + ';font-weight:700;font-size:12px">' +
+    (ketoOk ? '✓ ケト比率良好' : '目標：脂質70% タンパク25% 糖質5%') + '</div>';
 }
 
 // ─── WEIGHT ──────────────────────────────────────────────
