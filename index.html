@@ -153,15 +153,15 @@
       <!-- 栄養バー：カロリー→脂質→タンパク質→糖質→食物繊維 -->
       <div class="card-title">今日の栄養</div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">カロリー</span><span class="macro-val"><strong id="v-kcal" style="color:#6a1b9a">0</strong><span style="color:#aaa"> / 1500kcal</span></span></div>
+        <div class="macro-head"><span class="macro-label">カロリー</span><span class="macro-val"><strong id="v-kcal" style="color:#6a1b9a">0</strong><span style="color:#aaa"> / 2040kcal</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-kcal" style="background:#6a1b9a;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">脂質</span><span class="macro-val"><strong id="v-fat" style="color:#e65100">0</strong><span style="color:#aaa"> / 117g</span></span></div>
+        <div class="macro-head"><span class="macro-label">脂質</span><span class="macro-val"><strong id="v-fat" style="color:#e65100">0</strong><span style="color:#aaa"> / 150g</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-fat" style="background:#e65100;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">タンパク質</span><span class="macro-val"><strong id="v-protein" style="color:#1565c0">0</strong><span style="color:#aaa"> / 94g</span></span></div>
+        <div class="macro-head"><span class="macro-label">タンパク質</span><span class="macro-val"><strong id="v-protein" style="color:#1565c0">0</strong><span style="color:#aaa"> / 120g</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-protein" style="background:#1565c0;width:0%"></div></div>
       </div>
       <div class="macro-row">
@@ -169,15 +169,15 @@
         <div class="macro-track"><div class="macro-fill" id="b-carbs" style="background:#c62828;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">食物繊維</span><span class="macro-val"><strong id="v-fiber" style="color:#00838f">0</strong><span style="color:#aaa"> / 25g</span></span></div>
+        <div class="macro-head"><span class="macro-label">食物繊維</span><span class="macro-val"><strong id="v-fiber" style="color:#00838f">0</strong><span style="color:#aaa"> / 20g</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-fiber" style="background:#00838f;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">Mg マグネシウム</span><span class="macro-val"><strong id="v-mg" style="color:#2e7d32">0</strong><span style="color:#aaa"> / 400mg</span></span></div>
+        <div class="macro-head"><span class="macro-label">Mg マグネシウム</span><span class="macro-val"><strong id="v-mg" style="color:#2e7d32">0</strong><span style="color:#aaa"> / 500mg</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-mg" style="background:#2e7d32;width:0%"></div></div>
       </div>
       <div class="macro-row">
-        <div class="macro-head"><span class="macro-label">MCFA 中鎖脂肪酸</span><span class="macro-val"><strong id="v-mcfa" style="color:#c2185b">0</strong><span style="color:#aaa">g（参考30g）</span></span></div>
+        <div class="macro-head"><span class="macro-label">MCFA 中鎖脂肪酸</span><span class="macro-val"><strong id="v-mcfa" style="color:#c2185b">0</strong><span style="color:#aaa">g（目標20g）</span></span></div>
         <div class="macro-track"><div class="macro-fill" id="b-mcfa" style="background:#c2185b;width:0%"></div></div>
       </div>
       <!-- サマリー：1行目カロリー全幅／2行目脂質+タンパク／3行目糖質+食物繊維 -->
@@ -469,7 +469,7 @@
 
 <script>
 // ─── DATA ────────────────────────────────────────────────
-const TARGETS = { calories:1500, fat:117, protein:94, carbs:20 };
+const TARGETS = { calories:2040, fat:150, protein:120, carbs:20, fiber:20 };
 const STORAGE_KEY = "keto_v3_log";
 
 const CAT_COLORS = {
@@ -764,7 +764,7 @@ function carbsColor(c) {
 document.addEventListener("DOMContentLoaded", () => {
   const today = getToday();
   document.getElementById("header-date").textContent =
-    today + " · 糖質20g以下 / 1500kcal（18h断食）";
+    today + " · 糖質20g以下 / 2040kcal（18h断食）";
   renderCatButtons();
   renderSortButtons();
   renderFoodList();
@@ -1143,12 +1143,12 @@ function renderToday() {
   // Macro bars
   const macros = [
     { id:"carbs",   val:t.carbs,   target:TARGETS.carbs,    color:"#c62828" },
-    { id:"protein", val:t.protein, target:TARGETS.protein,  color:"#1565c0" },
+    { id:"protein", val:t.protein, target:TARGETS.protein, color:"#1565c0" },
     { id:"fat",     val:t.fat,     target:TARGETS.fat,      color:"#e65100" },
     { id:"kcal",    val:t.kcal,    target:TARGETS.calories, color:"#6a1b9a" },
     { id:"fiber",   val:t.fiber,   target:25,               color:"#00838f" },
-    { id:"mg",      val:t.mg,      target:400,              color:"#2e7d32" },
-    { id:"mcfa",    val:t.mcfa,    target:30,               color:"#c2185b" },
+    { id:"mg",      val:t.mg,      target:500,              color:"#2e7d32" },
+    { id:"mcfa",    val:t.mcfa,    target:20,               color:"#c2185b" },
   ];
   macros.forEach(m => {
     const pct  = Math.min((m.val / m.target) * 100, 100);
@@ -1951,7 +1951,7 @@ function drawPFC(t) {
 
 // ─── WEIGHT ──────────────────────────────────────────────
 const WEIGHT_KEY = "keto_weight_log";
-const START_WEIGHT = 80.0;
+const START_WEIGHT = 75.0; // 現在の体重に更新
 
 function loadWeightLog() { try { return JSON.parse(localStorage.getItem(WEIGHT_KEY) || "{}"); } catch { return {}; } }
 function saveWeightLog(l) { try { localStorage.setItem(WEIGHT_KEY, JSON.stringify(l)); } catch {} }
